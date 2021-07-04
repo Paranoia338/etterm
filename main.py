@@ -28,7 +28,7 @@ dirs = AppDirs(appName, appAuthor, roaming=True)
 directory = Path(dirs.user_data_dir)
 # file = Path(dirs.user_data_dir + "/eternal_terminal_commands_list.json")
 file = Path(dirs.user_data_dir + "/et_commands_list.json")
-print(file)
+# print(file)
 actual_commands = []
 global_comm_names = []
 
@@ -43,9 +43,6 @@ jumpports = []
 sshs = []
 
 
-index_comanda = None
-
-
 def checkFileAndCreate():
     if file.exists():
         pass
@@ -57,7 +54,8 @@ def checkFileAndCreate():
             f.close()
             # print("The JSON file with commands has been created")
         except Exception as e:
-            print(e)
+            pass
+            # print(e)
 
 
 if directory.exists():
@@ -69,7 +67,8 @@ else:
         # print("The folders structure for the configuration files has been created")
         checkFileAndCreate()
     except Exception as e:
-        print(e)
+        pass
+        # print(e)
 
 
 class CommName(QtWidgets.QWidget):
@@ -125,7 +124,6 @@ class MainWindow:
     prev_rev_comm = "Empty"
     prev_jhost_comm = "Empty"
     prev_jport_comm = "Empty"
-    # print(QStyleFactory.keys())
     item_row_number = None
     rootNode = None
     nume_comanda = None
@@ -134,6 +132,8 @@ class MainWindow:
     previous_deleted = None
     undo_list = []
     prev_val = None
+
+    index_comanda = None
 
 
     def __init__(self):
@@ -147,9 +147,6 @@ class MainWindow:
         self.process = QtCore.QProcess()
         # QProcess emits `readyRead` when there is data to be read
         # self.process.readyRead.connect(self.print_data_to_gui)
-
-        self.gui.kill_other_sessions_checkbox.stateChanged.connect(self.check_session_kill)
-        self.gui.forward_ssh_agent_checkbox.stateChanged.connect(self.check_ssh_forward)
 
         # self.gui.connect_osx_checkbox.stateChanged.connect(self.check_bifs)
 
@@ -166,32 +163,73 @@ class MainWindow:
         self.gui.create_button.clicked.connect(self.addItem)
         self.gui.launch_button.clicked.connect(self.run_qt_process)
 
+        self.gui.kill_other_sessions_checkbox.stateChanged.connect(self.check_session_kill)
+        self.gui.forward_ssh_agent_checkbox.stateChanged.connect(self.check_ssh_forward)
+
 
     def check_session_kill(self):
-        if self.gui.kill_other_sessions_checkbox.isChecked():
-            self.gui.textEdit.clear()
-            self.global_command += self.kill_other_session
-            self.gui.textEdit.setText(self.global_command)
-            self.gui.textEdit.repaint()
-        else:
-            if " --kill-other-sessions" in self.global_command:
-                self.global_command = self.global_command.replace(" --kill-other-sessions", "")
+        if self.index_comanda is None:
+            if self.gui.kill_other_sessions_checkbox.isChecked():
+                self.gui.textEdit.clear()
+                self.global_command += self.kill_other_session
+                self.gui.textEdit.setText(self.global_command)
+                self.gui.textEdit.repaint()
+            else:
+                if " --kill-other-sessions" in self.global_command:
+                    self.global_command = self.global_command.replace(" --kill-other-sessions", "")
 
+                self.gui.textEdit.clear()
+                self.gui.textEdit.setText(self.global_command)
+                self.gui.textEdit.repaint()
+        else:
+            cmd_already_there = self.gui.textEdit.text()
+            if self.gui.kill_other_sessions_checkbox.isChecked():
+                if " --kill-other-sessions" in cmd_already_there:
+                    pass
+                else:
+                    cmd_already_there += " --kill-other-sessions"
+                    self.global_command = cmd_already_there
+            else:
+                if " --kill-other-sessions" in cmd_already_there:
+                    cmd_already_there = cmd_already_there.replace(" --kill-other-sessions", "")
+                    self.global_command = cmd_already_there
+                else:
+                    pass
+            actual_commands[self.index_comanda] = cmd_already_there
             self.gui.textEdit.clear()
             self.gui.textEdit.setText(self.global_command)
             self.gui.textEdit.repaint()
 
 
     def check_ssh_forward(self):
-        if self.gui.forward_ssh_agent_checkbox.isChecked():
-            self.global_command += self.forward_ssh
-            self.gui.textEdit.clear()
-            self.gui.textEdit.setText(self.global_command)
-            self.gui.textEdit.repaint()
-        else:
-            if " --forward-ssh-agent" in self.global_command:
-                self.global_command = self.global_command.replace(" --forward-ssh-agent", "")
+        if self.index_comanda is None:
+            if self.gui.forward_ssh_agent_checkbox.isChecked():
+                self.global_command += self.forward_ssh
+                self.gui.textEdit.clear()
+                self.gui.textEdit.setText(self.global_command)
+                self.gui.textEdit.repaint()
+            else:
+                if " --forward-ssh-agent" in self.global_command:
+                    self.global_command = self.global_command.replace(" --forward-ssh-agent", "")
 
+                self.gui.textEdit.clear()
+                self.gui.textEdit.setText(self.global_command)
+                self.gui.textEdit.repaint()
+        else:
+            cmd_already_there = self.gui.textEdit.text()
+            if self.gui.forward_ssh_agent_checkbox.isChecked():
+                if " --forward-ssh-agent" in cmd_already_there:
+                    pass
+                else:
+                    cmd_already_there += " --forward-ssh-agent"
+                    self.global_command = cmd_already_there
+            else:
+                if " --forward-ssh-agent" in cmd_already_there:
+                    cmd_already_there = cmd_already_there.replace(" --forward-ssh-agent", "")
+                    self.global_command = cmd_already_there
+                else:
+                    pass
+            actual_commands[self.index_comanda] = cmd_already_there
             self.gui.textEdit.clear()
             self.gui.textEdit.setText(self.global_command)
             self.gui.textEdit.repaint()
@@ -368,8 +406,6 @@ class MainWindow:
                     self.check_session_kill()
                     self.check_ssh_forward()
         self.hostname = hostname
-        # self.clone_comm = self.global_command
-
 
     def hostname_input_focus_out(self):
         self.check_input_fields()
@@ -486,6 +522,7 @@ class MainWindow:
 
 
     def run_qt_process(self):
+        # run the process
         if self.hostname is None:
             msg = QMessageBox()
             msg.setWindowIcon(QtGui.QIcon(r".\icons\rejected.svg"))
@@ -495,94 +532,137 @@ class MainWindow:
                 "<font size = 5 color = red >The Hostname field is mandatory.\nPlease fill it with a value!</font>")
             msg.exec_()
         else:
-            self.check_command_param_at_launch()
-            # run the process
             # `start` takes the exec and a list of arguments
-            # self.process.start('ping', ['www.google.com']) or self.process.start('ping') if it contains the arguments joined in the string of the command
-            # self.process.start(self.global_command)
+            if self.index_comanda is None:
+                cmd = self.gui.textEdit.text()
+                # print("Eu rulez acum")
+                # self.process.start('ping', ['www.google.com']) or self.process.start('ping') if it contains the arguments joined in the string of the command
+                self.process.start(cmd)
+            else:
+                if len(self.new_list_copy) == 0:
+                    self.index_comanda = None
+                    cmd = self.gui.textEdit.text()
+                    # print(cmd)
+                    self.process.start(cmd)
+                else:
+                    self.check_command_param_at_launch(self.index_comanda)
+                    # print(self.global_command)
+                    self.process.start(self.global_command)
 
-    # def check_command_param_at_launch(self):
-        # current_rand = self.gui.listWidget.
 
-        # print(current_rand)
+    def check_command_param_at_launch(self, current_rand):
+        self.check_input_fields()
+        commands_list = []
+        to_be_modified = None
+        with open(file) as f:
+            data = json.load(f)
+            to_be_modified = data['commands_list']
+            for x in data['commands_list']:
+                commands_list.append(x)
 
-        # with open(file) as f:
-        #     data = json.load(f)
-        #     for x in data['commands_list']:
-        #         item = str(x['command_name'])
-        #         actual_commands.append(str(x['the_command']))
-        #
-        #
-        # cmd = name_command
-        # cmd2 = command_parameters
-        #
-        # hst_nm = self.gui.hostname_input.text()
-        # prt = self.gui.port_input.text()
-        # usrnm = self.gui.username_input.text()
-        # klssn = self.gui.kill_other_sessions_checkbox.isChecked()
-        # tnl = self.gui.tunnel_input.text()
-        # rev_tnl = self.gui.reverse_tunnel_input.text()
-        # jmphnm = self.gui.jumphost_input.text()
-        # jmpprt = self.gui.jumphost_port.text()
-        # ssh_ag = self.gui.forward_ssh_agent_checkbox.isChecked()
-        #
-        # if hst_nm is not "":
-        #     cmd_hostname = hst_nm
-        # else:
-        #     cmd_hostname = ""
-        #
-        # if prt is not "":
-        #     cmd_port = prt
-        # else:
-        #     cmd_port = ""
-        #
-        # if usrnm is not "":
-        #     cmd_username = usrnm
-        # else:
-        #     cmd_username = ""
-        #
-        # if klssn is True:
-        #     cmd_kill = True
-        # else:
-        #     cmd_kill = False
-        #
-        # if tnl is not "":
-        #     cmd_tunnel = tnl
-        # else:
-        #     cmd_tunnel = ""
-        #
-        # if rev_tnl is not "":
-        #     cmd_reverse = rev_tnl
-        # else:
-        #     cmd_reverse = ""
-        #
-        # if jmphnm is not "":
-        #     cmd_jmp = jmphnm
-        # else:
-        #     cmd_jmp = ""
-        #
-        # if jmpprt is not "":
-        #     cmd_jmpport = jmpprt
-        # else:
-        #     cmd_jmpport = ""
-        #
-        # if ssh_ag is True:
-        #     cmd_ssh = True
-        # else:
-        #     cmd_ssh = False
-        #
-        #
-        # a = {"command_name": cmd, "the_command": cmd2, "hostname": cmd_hostname, "port": cmd_port, "username": cmd_username, "kill": cmd_kill, "tunnel": cmd_tunnel, "reverse": cmd_reverse, "jumphost": cmd_jmp, "jumphost_port": cmd_jmpport, "ssh": cmd_ssh}
-        #
+        command = commands_list[current_rand]
+        cmd = command['command_name']
+        hst_nm = self.gui.hostname_input.text()
+        prt = self.gui.port_input.text()
+        usrnm = self.gui.username_input.text()
+        klssn = self.gui.kill_other_sessions_checkbox.isChecked()
+        tnl = self.gui.tunnel_input.text()
+        rev_tnl = self.gui.reverse_tunnel_input.text()
+        jmphnm = self.gui.jumphost_input.text()
+        jmpprt = self.gui.jumphost_port.text()
+        ssh_ag = self.gui.forward_ssh_agent_checkbox.isChecked()
+        if hst_nm is not "":
+            cmd_hostname = hst_nm
+        else:
+            cmd_hostname = ""
+        if prt is not "":
+            cmd_port = prt
+        else:
+            cmd_port = ""
+        if usrnm is not "":
+            cmd_username = usrnm
+        else:
+            cmd_username = ""
+        if klssn is True:
+            cmd_kill = "True"
+        else:
+            cmd_kill = "False"
+        if tnl is not "":
+            cmd_tunnel = tnl
+        else:
+            cmd_tunnel = ""
+        if rev_tnl is not "":
+            cmd_reverse = rev_tnl
+        else:
+            cmd_reverse = ""
+        if jmphnm is not "":
+            cmd_jmp = jmphnm
+        else:
+            cmd_jmp = ""
+        if jmpprt is not "":
+            cmd_jmpport = jmpprt
+        else:
+            cmd_jmpport = ""
+        if ssh_ag is True:
+            cmd_ssh = "True"
+        else:
+            cmd_ssh = "False"
+        hostnames[current_rand] = cmd_hostname
+        ports[current_rand] = cmd_port
+        usernames[current_rand] = cmd_username
+        kills[current_rand] = cmd_kill
+        tunnels[current_rand] = cmd_tunnel
+        reverses[current_rand] = cmd_reverse
+        jumphosts[current_rand] = cmd_jmp
+        jumpports[current_rand] = cmd_jmpport
+        sshs[current_rand] = cmd_ssh
+        if cmd_username is not "":
+            username_with_at = cmd_username + "@"
+        else:
+            username_with_at = ""
+        if cmd_port is not "":
+            port_with_colon = ":" + cmd_port
+        else:
+            port_with_colon = ""
+        if cmd_tunnel is not "":
+            tunnel_cmd = " --tunnel " + cmd_tunnel
+        else:
+            tunnel_cmd = ""
+        if rev_tnl is not "":
+            reverse_cmd = " --reversetunnel " + rev_tnl
+        else:
+            reverse_cmd = ""
+        if jmphnm is not "":
+            jmp_cmd = "  --jumphost " + jmphnm
+        else:
+            jmp_cmd = ""
+        if jmpprt is not "":
+            jmpport_cmd = " --jport " + jmpprt
+        else:
+            jmpport_cmd = ""
+        if klssn is True:
+            kill_cmd = " --kill-other-sessions"
+        else:
+            kill_cmd = ""
+        if ssh_ag is True:
+            ssh_cmd = " --forward-ssh-agent"
+        else:
+            ssh_cmd = ""
+        cmd2 = "et {}{}{}{}{}{}{}{}{}".format(username_with_at, cmd_hostname, port_with_colon, tunnel_cmd, reverse_cmd, jmp_cmd, jmpport_cmd, kill_cmd, ssh_cmd)
+        a = {"command_name": cmd, "the_command": cmd2, "hostname": cmd_hostname, "port": cmd_port, "username": cmd_username, "kill": cmd_kill, "tunnel": cmd_tunnel, "reverse": cmd_reverse, "jumphost": cmd_jmp, "jumphost_port": cmd_jmpport, "ssh": cmd_ssh}
+
+        to_be_modified[current_rand] = a
+
+        with open(file, 'r') as fs:
+            data = json.load(fs)
+            with open(file, 'w') as fis:
+                data['commands_list'] = to_be_modified
+                json.dump(data, fis, indent=2)
 
 
     # def print_data_to_gui(self):
     #     output = str(bytes(self.process.readAll()), 'utf-8')
     #     self.gui.textEdit.insert(output)
-
-    # def save_comm_items(self):
-
-
 
     def createListview(self):
         commands_names = []
@@ -612,31 +692,31 @@ class MainWindow:
     def printCommandParameters(self, val):
         self.item_row_number = val.row()
         self.nume_comanda = val.data()
-        index_comanda = global_comm_names.index("{}".format(self.nume_comanda))
-        self.gui.textEdit.setText(actual_commands[index_comanda])
-
-
-        self.gui.hostname_input.setText(hostnames[index_comanda])
-        self.hostname = hostnames[index_comanda]
-        self.gui.port_input.setText(ports[index_comanda])
+        self.index_comanda = global_comm_names.index("{}".format(self.nume_comanda))
+        self.gui.hostname_input.setText(hostnames[self.index_comanda])
+        self.hostname = hostnames[self.index_comanda]
+        self.gui.port_input.setText(ports[self.index_comanda])
         # print(usernames[index_comanda])
-        self.gui.username_input.setText(usernames[index_comanda])
+        self.gui.username_input.setText(usernames[self.index_comanda])
 
-        if kills[index_comanda] == 'True':
+        if kills[self.index_comanda] == 'True':
             self.gui.kill_other_sessions_checkbox.setChecked(True)
         else:
             self.gui.kill_other_sessions_checkbox.setChecked(False)
 
-        self.gui.tunnel_input.setText(tunnels[index_comanda])
-        self.gui.reverse_tunnel_input.setText(reverses[index_comanda])
-        self.gui.jumphost_input.setText(jumphosts[index_comanda])
-        self.gui.jumphost_port.setText(jumpports[index_comanda])
+        self.gui.tunnel_input.setText(tunnels[self.index_comanda])
+        self.gui.reverse_tunnel_input.setText(reverses[self.index_comanda])
+        self.gui.jumphost_input.setText(jumphosts[self.index_comanda])
+        self.gui.jumphost_port.setText(jumpports[self.index_comanda])
 
-        if sshs[index_comanda] == 'True':
+        if sshs[self.index_comanda] == 'True':
             self.gui.forward_ssh_agent_checkbox.setChecked(True)
         else:
             self.gui.forward_ssh_agent_checkbox.setChecked(False)
 
+        self.gui.textEdit.setText(actual_commands[self.index_comanda])
+
+        self.check_input_fields()
 
 
 
@@ -692,7 +772,8 @@ class MainWindow:
                 self.secondWindow.semnal.connect(self.add_item_triggered_by_signal)
                 self.secondWindow.reveal()
             except Exception as e:
-                print(e)
+                pass
+                # print(e)
 
     def add_item_triggered_by_signal(self, signal):
         self.name_command = signal
@@ -732,9 +813,9 @@ class MainWindow:
             cmd_username = ""
 
         if klssn is True:
-            cmd_kill = True
+            cmd_kill = "True"
         else:
-            cmd_kill = False
+            cmd_kill = "False"
 
         if tnl is not "":
             cmd_tunnel = tnl
@@ -757,10 +838,9 @@ class MainWindow:
             cmd_jmpport = ""
 
         if ssh_ag is True:
-            cmd_ssh = True
+            cmd_ssh = "True"
         else:
-            cmd_ssh = False
-
+            cmd_ssh = "False"
 
         a = {"command_name": cmd, "the_command": cmd2, "hostname": cmd_hostname, "port": cmd_port, "username": cmd_username, "kill": cmd_kill, "tunnel": cmd_tunnel, "reverse": cmd_reverse, "jumphost": cmd_jmp, "jumphost_port": cmd_jmpport, "ssh": cmd_ssh}
 
@@ -786,6 +866,7 @@ class MainWindow:
 
 if __name__ == "__main__":
     app_context = QApplication(sys.argv)
+    # print(QStyleFactory.keys())
     mainWindow = MainWindow()
     mainWindow.show()
     sys.exit(app_context.exec_())
