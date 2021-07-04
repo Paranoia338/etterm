@@ -76,27 +76,6 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="client" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="EthernalTerminalGUI" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/client.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
     <configuration name="interface" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="EthernalTerminalGUI" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -139,13 +118,34 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="test" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="EthernalTerminalGUI" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/test.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
         <item itemvalue="Python.main" />
-        <item itemvalue="Python.client" />
         <item itemvalue="Python.interface" />
         <item itemvalue="Python.ask" />
         <item itemvalue="Python.aaa" />
+        <item itemvalue="Python.test" />
       </list>
     </recent_temporary>
   </component>
@@ -161,31 +161,30 @@
     <servers />
   </component>
   <component name="WindowStateProjectService">
-    <state x="690" y="267" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1625080981429">
+    <state x="690" y="267" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1622129436216">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="690" y="267" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1622129436216" />
-    <state x="690" y="267" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1625080981429" />
-    <state width="1899" height="231" key="GridCell.Tab.0.bottom" timestamp="1625205036775">
+    <state width="1899" height="202" key="GridCell.Tab.0.bottom" timestamp="1624916493250">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="1899" height="406" key="GridCell.Tab.0.bottom/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1622494636196" />
-    <state width="1899" height="231" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1625205036775" />
-    <state width="1899" height="231" key="GridCell.Tab.0.center" timestamp="1625205036775">
+    <state width="1899" height="202" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1624916493250" />
+    <state width="1899" height="202" key="GridCell.Tab.0.center" timestamp="1624916493250">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="1899" height="406" key="GridCell.Tab.0.center/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1622494636195" />
-    <state width="1899" height="231" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1625205036775" />
-    <state width="1899" height="231" key="GridCell.Tab.0.left" timestamp="1625205036775">
+    <state width="1899" height="202" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1624916493250" />
+    <state width="1899" height="202" key="GridCell.Tab.0.left" timestamp="1624916493250">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="1899" height="406" key="GridCell.Tab.0.left/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1622494636195" />
-    <state width="1899" height="231" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1625205036775" />
-    <state width="1899" height="231" key="GridCell.Tab.0.right" timestamp="1625205036775">
+    <state width="1899" height="202" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1624916493250" />
+    <state width="1899" height="202" key="GridCell.Tab.0.right" timestamp="1624916493250">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="1899" height="406" key="GridCell.Tab.0.right/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1622494636195" />
-    <state width="1899" height="231" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1625205036775" />
+    <state width="1899" height="202" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1624916493250" />
     <state width="1899" height="347" key="GridCell.Tab.1.bottom" timestamp="1624915737513">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
